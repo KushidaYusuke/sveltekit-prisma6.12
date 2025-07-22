@@ -1,4 +1,4 @@
-import prisma from '$lib/prisma';
+import prisma from '$lib/server/prisma';
 import { env } from '$env/dynamic/private';
 
 export async function load() {
