@@ -1,78 +1,60 @@
-# SvelteKit Example
+# Prisma 6.12 における動作確認
 
-This example shows how to implement a simple web app using [SvelteKit](https://svelte.dev/docs/kit) and [Prisma ORM](https://www.prisma.io/docs).
-
-## Getting started
-
-### 1. Download the example and navigate to the project directory
-
-Download this example:
+* Prisma 6.12 で `prisma-client` ジェネレータを使用(ESMに対応)。
+* `npm run dev` では正常に動作したが、`npm run build & npm run preview`した場合は、以下のようなエラーが発生した。
 
 ```
-npx try-prisma@latest --template orm/sveltekit  --install npm --name sveltekit
+The table `main.User` does not exist in the current database.
+    at Jn.handleRequestError (file:///home/yusuke/sveltekit-prisma6.12/node_modules/@prisma/client/runtime/library.mjs:128:7460)
+    at Jn.handleAndLogRequestError (file:///home/yusuke/sveltekit-prisma6.12/node_modules/@prisma/client/runtime/library.mjs:128:6785)
+    at Jn.request (file:///home/yusuke/sveltekit-prisma6.12/node_modules/@prisma/client/runtime/library.mjs:128:6492)
+    at async l (file:///home/yusuke/sveltekit-prisma6.12/node_modules/@prisma/client/runtime/library.mjs:137:9767)
+    at async load (file:///home/yusuke/sveltekit-prisma6.12/.svelte-kit/output/server/entries/pages/_page.server.ts.js:89:17)
+    at async load_server_data (file:///home/yusuke/sveltekit-prisma6.12/.svelte-kit/output/server/index.js:683:18)
+    at async file:///home/yusuke/sveltekit-prisma6.12/.svelte-kit/output/server/index.js:2382:18 {
+  code: 'P2021',
+  meta: { modelName: 'User', table: 'main.User' },
+  clientVersion: '6.12.0'
+}
 ```
 
-Then navigate to the project directory
+---
 
-```
-cd sveltekit
-```
+## 手順
 
-<details><summary><strong>Alternative:</strong> Clone the entire repo</summary>
+1. このリポジトリをクローン
 
-Clone this repository:
+   ```bash
+   git clone <リポジトリURL>
+   ```
 
-```
-git clone git@github.com:prisma/prisma-examples.git --depth=1
-```
+2. パッケージのインストール
 
-Install npm dependencies:
+   ```bash
+   npm install
+   ```
 
-```
-cd prisma-examples/orm/sveltekit
-npm install
-```
+3. マイグレーションの実行
 
-</details>
+   ```bash
+   npx prisma migrate dev
+   ```
 
-### 2. Create a Prisma Postgres instance
+4. シードデータの投入
 
-This example uses a [Prisma Postgres](https://prisma.io/postgres) database by default. To get started with the project, you will need to setup a Prisma Postgres connection string:
+   ```bash
+   npx prisma db seed
+   ```
 
-1. Set up a new Prisma Postgres instance in the [Prisma Data Platform Console](https://console.prisma.io) and copy the database connection URL.
+5. 開発用サーバーの起動
 
-2. Add your database url to the `.env`
+   ```bash
+   npm run dev
+   ```
 
-That's it, your project is now configured to use Prisma Postgres!
+6. ビルドして動作確認
 
-### 3. Generate Prisma Client
-
-Run the following command to generate the Prisma Client. This is what you will be using to interact with your database.
-
-```terminal
-npx prisma init --db
-```
-
-Generate the Prisma types:
-
-```terminal
-npx prisma generate
-```
-
-### 4. Start the SvelteKit server
-
-```
-npm run dev
-```
-
-The server is now running at http://localhost:5173
-
-## Switch to another database
-
-If you want to try this example with another database rather than Prisma Postgres, refer to the [Databases](https://www.prisma.io/docs/orm/overview/databases) section in our documentation.
-
-## Next steps
-
-- Check out the [Prisma docs](https://www.prisma.io/docs)
-- Share your feedback on the [Prisma Discord](https://pris.ly/discord/)
-- Create issues and ask questions on [GitHub](https://github.com/prisma/prisma/)
+   ```bash
+   npm run build
+   npm run preview
+   ```
